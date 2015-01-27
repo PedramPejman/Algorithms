@@ -3,7 +3,7 @@ import java.io.*;
 
 
 public class Hw2 {
-  public static HashMap<String, Integer> companies = new HashMap<String, Integer>();
+  public static Map<String, Integer> companies = new HashMap<String, Integer>();
   public static int[] values = new int[3]; //[m,b,c]
   public static void main (String[] args) {
     if (args.length < 1) System.exit(0);
@@ -14,7 +14,7 @@ public class Hw2 {
       String[] values_string = new String[3];
       //Do this n trials
       for (int i=0; i<n; i++) {
-        //Read [m,b,c]
+        //Read [m,b,c] - first we read it as a String[3] then parse it to a int[3]
         values_string = (br.readLine()).split(" ");
         for (int j=0; j<3; j++) {
           values[j] = Integer.parseInt(values_string[j]);
@@ -36,13 +36,16 @@ public class Hw2 {
   public static void process (String name, int one, int half) {
     int remain = values[0];
     int cost = 0;
+    //Do while remain > m
     while (remain > values[1]) {
-      if (Math.ceil(remain/2) >= values[1]) {
-        remain -= (int)Math.ceil(remain/2);
+      //If we can halve the boxes, do it
+      if (Math.floor(remain/2) >= values[1]) {
+        remain = (int)Math.floor(remain/2);
         cost += half;
       }
-      else {
-        remain--;
+      //If not, decrease by one
+      else{
+        remain --;
         cost += one;
       }
     }
@@ -52,27 +55,33 @@ public class Hw2 {
   public static void returnResults (int cycle) {
     //print header for section
     System.out.printf("Case %d\n", cycle+1);
-
-    for (String key: companies.keySet()) {
-      System.out.printf("%s : %d\n", key, companies.get(key));
+    //Sort the map and print it
+    ValueComparator vc = new ValueComparator(companies);
+    TreeMap<String, Integer> sorted = new TreeMap<String, Integer>(vc);
+    sorted.putAll(companies);
+    for (String key: sorted.keySet()) {
+      System.out.printf("%s : %d\n", key,  companies.get(key));
     }
+    //Empty the static map for next round
     companies = new HashMap<String, Integer>();
   }
 }
 
+//For fun (sorta). Used to construct a sorted Hashmap from an unordered one. 
+//It's a bit unorthodox but I had fun designing it so I consider it a win :)
 class ValueComparator implements Comparator<String> {
 
-    Map<String, Double> base;
-    public ValueComparator(Map<String, Double> base) {
+    Map<String, Integer> base;
+    public ValueComparator(Map<String, Integer> base) {
         this.base = base;
     }
 
     // Note: this comparator imposes orderings that are inconsistent with equals.    
     public int compare(String a, String b) {
         if (base.get(a) >= base.get(b)) {
-            return -1;
-        } else {
             return 1;
+        } else {
+            return -1;
         } // returning 0 would merge keys
     }
 }
