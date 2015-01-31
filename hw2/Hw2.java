@@ -24,9 +24,7 @@ public class Hw2 {
           process(values_string[0], Integer.parseInt(values_string[1]), Integer.parseInt(values_string[2]));
         }
         returnResults(i);
-      }
-      
-        
+      } 
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -39,7 +37,7 @@ public class Hw2 {
     //Do while remain > m
     while (remain > values[1]) {
       //If we can halve the boxes, do it
-      if (Math.floor(remain/2) >= values[1]) {
+      if ((Math.floor(remain/2) >= values[1])&&(half <= Math.ceil(remain/2.0)*one)) {
         remain = (int)Math.floor(remain/2);
         cost += half;
       }
@@ -60,7 +58,7 @@ public class Hw2 {
     TreeMap<String, Integer> sorted = new TreeMap<String, Integer>(vc);
     sorted.putAll(companies);
     for (String key: sorted.keySet()) {
-      System.out.printf("%s : %d\n", key,  companies.get(key));
+      System.out.printf("%s %d\n", key,  companies.get(key));
     }
     //Empty the static map for next round
     companies = new HashMap<String, Integer>();
@@ -78,10 +76,13 @@ class ValueComparator implements Comparator<String> {
 
     // Note: this comparator imposes orderings that are inconsistent with equals.    
     public int compare(String a, String b) {
-        if (base.get(a) >= base.get(b)) {
+        if (base.get(a) > base.get(b)) {
             return 1;
-        } else {
+        } else if (base.get(a) < base.get(b)){
             return -1;
         } // returning 0 would merge keys
+          else {
+          return (a.compareTo(b));
+        }
     }
 }
