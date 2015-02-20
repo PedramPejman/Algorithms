@@ -43,41 +43,44 @@ public class Hw3 {
   if ((end - beg)<4) {
     return minSquaredDist(points, yVals, beg, end);
   }
-  Point[] rArr = new Point[end-beg+1];
+  Point[] rArr = new Point[end-beg];
   minR = findMinDist(points, rArr, (beg+end)/2, end);
-  Point[] lArr = new Point[end-beg+1];
+  Point[] lArr = new Point[end-beg];
   minL = findMinDist(points, lArr, beg, (beg+end)/2);
   yVals = merge(rArr, lArr);
   d = Math.min(minR, minL);
-  return Math.min(d, findMidMin(points, beg, end, d));
+  return Math.min(d, findMidMin(points, yVals, beg, end, d));
  }
 
- public static double findMidMin(List<Point> points, int beg, int end, double d) { 
+ public static double findMidMin(List<Point> points, Point[] yVals, int beg, int end, double d) { 
+    List<Point> temp = new ArrayList<Point>();
     int mid = (beg + end)/2;
     int start = mid;
     int finish = mid;
-    sortX = false;
-    while ((start > 0) && (d > Math.abs(points.get(mid).x - points.get(start).x))) stripSet.add(points.get(start--)); 
-    while ((finish < points.size()-1) && (d > Math.abs(points.get(mid).x - points.get(finish).x))) stripSet.add(points.get(finish++));
-    Point[] strip = stripSet.toArray(new Point[stripSet.size()]);
-    for (int i=0; i<=strip.length; i++) {
-      for (int j=i+1; j<=Math.min(i+7,strip.length-1); j++) {
-        d = Math.min(d, distance(strip[i], strip[j]));
+    while ((start > 0) && (d > Math.abs(points.get(mid).x - points.get(start).x))) start--; 
+    while ((finish < points.size()-1) && (d > Math.abs(points.get(mid).x - points.get(finish).x))) finish++;
+    for (Point p : yVals) {
+      if (p != null) {
+      if (Math.abs(points.get(mid).x - p.x) < d) temp.add(p);}
+    }
+    for (int i=0; i<=temp.size(); i++) {
+      for (int j=i+1; j<=Math.min(i+7, temp.size() -1); j++) {
+        d = Math.min(d, distance(temp.get(i), temp.get(j)));
       }
     }
     return d;
  }
 
- public static double minSquaredDist(List<Point> points, int[] yVals, int beg, int end) {
+ public static double minSquaredDist(List<Point> points, Point[] yVals, int beg, int end) {
     double min = distance(points.get(beg), points.get(beg+1));
     if (end - beg == 3) {
       min = Math.min(min, distance(points.get(beg), points.get(beg+2)));
       min = Math.min(min, distance(points.get(beg+1), points.get(beg+2)));
     }
     for (int i=beg; i<end; i++) {
-      yvals[i-beg] = points.get(i);
+      yVals[i-beg] = points.get(i);
     }
-    Arrays.sort(yvals);
+    Arrays.sort(yVals, new Comp());
     return min;
  }
 
@@ -96,6 +99,16 @@ public class Hw3 {
   else System.out.printf("%.4f\n",output);
  }
 
+static class Comp implements Comparator<Point> {
+  public int compare(Point a, Point b) {
+    if (a == null && b == null) {
+      return 0;
+    }
+    if (a == null) return 1;
+    if (b == null) return -1;
+    return a.compareTo(b);
+  }
+}
 static class Point implements Comparable<Point>{
   public double x,y;
   public Point(double x, double y) {
