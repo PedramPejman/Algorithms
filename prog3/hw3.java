@@ -42,9 +42,15 @@ public class hw3 {
   if ((end - beg)<4) {
     return minSquaredDist(points, yVals, beg, end);
   }
+<<<<<<< HEAD:prog3/hw3.java
   Point[] rArr = new Point[end-(beg+end)/2];
   minR = findMinDist(points, rArr, (beg+end)/2, end);
   Point[] lArr = new Point[(end+beg)/2-beg];
+=======
+  Point[] rArr = new Point[end-beg];
+  minR = findMinDist(points, rArr, (beg+end)/2, end);
+  Point[] lArr = new Point[end-beg];
+>>>>>>> 8d5418f... you're an asshole kyle:hw4/Hw3.java
   minL = findMinDist(points, lArr, beg, (beg+end)/2);
   merge(yVals, lArr, rArr);
   d = Math.min(minR, minL);
@@ -60,10 +66,16 @@ public class hw3 {
     while ((finish < points.size()-1) && (d > Math.abs(points.get(mid).x - points.get(finish).x))) finish++;
     for (Point p : yVals) {
       if (p != null) {
+<<<<<<< HEAD:prog3/hw3.java
       if (Math.abs(points.get(mid).x - p.x) < d) temp.add(p);
       }
     }
     for (int i=0; i<temp.size(); i++) {
+=======
+      if (Math.abs(points.get(mid).x - p.x) < d) temp.add(p);}
+    }
+    for (int i=0; i<=temp.size(); i++) {
+>>>>>>> 8d5418f... you're an asshole kyle:hw4/Hw3.java
       for (int j=i+1; j<=Math.min(i+7, temp.size() -1); j++) {
         d = Math.min(d, distance(temp.get(i), temp.get(j)));
       }
@@ -104,8 +116,13 @@ static class Comp implements Comparator<Point> {
     if (a == null && b == null) {
       return 0;
     }
+<<<<<<< HEAD:prog3/hw3.java
     if (a == null) return -1;
     if (b == null) return 1;
+=======
+    if (a == null) return 1;
+    if (b == null) return -1;
+>>>>>>> 8d5418f... you're an asshole kyle:hw4/Hw3.java
     return a.compareTo(b);
   }
 }
